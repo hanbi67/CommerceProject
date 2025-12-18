@@ -18,9 +18,14 @@ public class Product {
         this.stock = stock;
     }
 
-    //출력용 메서드
+    //메뉴 출력 메서드
     public void printInfo() {
         System.out.printf("%-15s | %,10d원 | %s%n", name, price, description);
+    }
+
+    //선택한 제품 출력 메서드
+    public void printSelectedInfo() {
+        System.out.println(String.format("%s | %,10d원 | %s | 재고: %d개", name, price, description, stock));
     }
 
 }
