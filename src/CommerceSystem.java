@@ -78,7 +78,7 @@ public class CommerceSystem {
     }
 
     //main 실행 시 바로 출력되는 메뉴
-    public void printCategoryList(List<Category> categories) {
+    private void printCategoryList(List<Category> categories) {
         System.out.println("[ 실시간 커머스 플랫폼 메인 ]");
         for (int i = 0; i < categories.size(); i++) {
             System.out.println((i + 1) + ". " + categories.get(i).getCategoryName());
@@ -86,7 +86,7 @@ public class CommerceSystem {
         System.out.println("0. 종료             | 프로그램 종료");
     }
 
-    public void printProductList(Category category) {
+    private void printProductList(Category category) {
 
         System.out.println("[ " + category.getCategoryName() + " 카테고리 ]");
         List<Product> products = category.getProducts();
