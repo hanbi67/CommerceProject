@@ -94,15 +94,14 @@ public class AdminModeSystem {
                     break;
                 case 4:
                     //전체 상품 현황(모든 카테고리, 모든 상품 출력)
+                    printAllProducts(commerceSystem.getCategories());
                     break;
                 default:
-                    System.out.println("default 잘못된 입력입니다. 다시 입력해주세요.");
+                    System.out.println("잘못된 입력입니다. 다시 입력해주세요.");
                     break;
             }
-
-        }
-
-    }
+        }//while()
+    }//adminMode()
 
     //관리자 모드 메뉴 출력
     private void printAdminMenu(){
@@ -205,13 +204,13 @@ public class AdminModeSystem {
 
         System.out.println("상품이 성공적으로 추가되었습니다!");
 
-        //선택한 카테고리의 상품 목록 출력 (확인용)
-        List<Product> products = selectedCategory.getProducts();
-
-        for (int i = 0; i < products.size(); i++) {
-            System.out.print((i + 1) + ". ");
-            products.get(i).printSelectedInfo();
-        }
+//        //선택한 카테고리의 상품 목록 출력 (확인용)
+//        List<Product> products = selectedCategory.getProducts();
+//
+//        for (int i = 0; i < products.size(); i++) {
+//            System.out.print((i + 1) + ". ");
+//            products.get(i).printSelectedInfo();
+//        }
     }//adminAddProduct()
 
     //2. 상품명 수정
@@ -368,6 +367,32 @@ public class AdminModeSystem {
                 System.out.println("숫자만 입력해야합니다. 다시 입력하세요.");
             }
         }//while()
-    }
+    }//adminDeleteProduct()
+
+    //4. 전체 상품 현황
+    //모든 카테고리의 모든 상품 목록 출력 메서드
+    private void printAllProducts(List<Category> categories){
+        Category category = null;
+        Product product = null;
+
+        System.out.println("\n[ 전체 상품 현황 ]");
+
+        for (int i = 0; i < categories.size(); i++) {
+            category = categories.get(i);
+            System.out.println("\n[ " + category.getCategoryName() + " ]");
+
+            if(category.getProducts().isEmpty()){
+                System.out.println("등록된 상품이 없습니다.");
+                continue;
+            }
+
+            for (int j = 0; j < categories.get(i).getProducts().size(); j++) {
+                product = categories.get(i).getProducts().get(j);
+                System.out.printf((j + 1) + ". ");
+                product.printSelectedInfo(); //상품 정보 출력
+            }
+        }
+        System.out.println("\n==== 전체 상품 현황 출력 종료 ====\n");
+    }//printAllProducts()
 
 }
