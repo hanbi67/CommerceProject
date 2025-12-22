@@ -8,6 +8,7 @@ public class CommerceSystem {
     //Product를 관리하는 리스트 -> 카테고리를 통해 products에 접근하게 해야함
     private List<Category> categories;
     private ShoppingCart shoppingCart = new ShoppingCart();
+    AdminModeSystem adminModeSystem = new AdminModeSystem(this);
 
     //main에서 categories를 전달받음
     public CommerceSystem(List<Category> categories) {
@@ -18,7 +19,7 @@ public class CommerceSystem {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            printCategoryList(categories);
+            //printCategoryList(categories);
 
             Integer select;
             Category selectedCategory;
@@ -27,6 +28,8 @@ public class CommerceSystem {
             //잘못된 입력일 경우 반복, try-catch문으로 예외처리
             while (true) {
                 try {
+                    printCategoryList(categories);
+
                     select = scanner.nextInt();
 
                     //0. 종료
@@ -41,6 +44,18 @@ public class CommerceSystem {
                         }
                         orderManage(select, scanner);
                         continue;
+                    }
+
+                    //6. 관리자 모드
+                    if (select == (categories.size()+3)) {
+                        boolean isAdmin = adminModeSystem.checkAdminPw(); //true or false 리턴
+
+                        //isAdmin이 false이면 select선택 while문으로 돌아감
+                        if(!isAdmin){
+                            continue;
+                        }
+                        //관리자 모드 시작
+                        adminModeSystem.adminMode();
                     }
 
                     selectedCategory = categories.get(select - 1);
@@ -127,19 +142,20 @@ public class CommerceSystem {
         }//while()
     }//start()
 
-    //main 실행 시 바로 출력되는 메뉴
+    //main 실행 시 바로 출력되는 메인 메뉴
     private void printCategoryList(List<Category> categories) {
         System.out.println("[ 실시간 커머스 플랫폼 메인 ]");
         for (int i = 0; i < categories.size(); i++) {
             System.out.println((i + 1) + ". " + categories.get(i).getCategoryName());
         }
         System.out.println("0. 종료             | 프로그램 종료");
+        System.out.println((categories.size()+3) + ". 관리자 모드");
 
         //장바구니에 이미 상품이 들어 있으면 출력
         if (!shoppingCart.isEmpty()) {
             System.out.println("\n[ 주문 관리 ]");
-            System.out.println("4. 장바구니 확인    | 장바구니를 확인 후 주문합니다.");
-            System.out.println("5. 주문 취소       | 진행중인 주문을 취소합니다.");
+            System.out.println((categories.size()+1) + ". 장바구니 확인    | 장바구니를 확인 후 주문합니다.");
+            System.out.println((categories.size()+2) + ". 주문 취소       | 진행중인 주문을 취소합니다.");
         }
     }
 
@@ -229,6 +245,14 @@ public class CommerceSystem {
                 scanner.nextLine();
             }
         }//while()
+    }
+
+    //관리자 비밀번호 설정, 인증 시스템
+
+
+    //6.관리자 모드
+    public void adminMode(Integer select){
+
     }
 
     //프로그램 종료 메서드
