@@ -1,3 +1,5 @@
+import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 //관리자 모드
@@ -75,8 +77,12 @@ public class AdminModeSystem {
             switch (adminSelect){
                 case 0:
                     //메인으로 돌아가기
+                    System.out.println("메인 메뉴로 돌아갑니다.");
+                    setAdminMode(false);
+                    break;
                 case 1:
                     //상품 추가 기능 메서드
+                    adminAddProduct(commerceSystem.getCategories());
                     break;
                 case 2:
                     //상품 수정 기능 메서드
@@ -88,7 +94,7 @@ public class AdminModeSystem {
                     //전체 상품 현황(모든 카테고리, 모든 상품 출력)
                     break;
                 default:
-                    System.out.println("default잘못된 입력입니다. 다시 입력해주세요.");
+                    System.out.println("default 잘못된 입력입니다. 다시 입력해주세요.");
                     break;
             }
 
@@ -105,4 +111,105 @@ public class AdminModeSystem {
         System.out.println("4. 전체 상품 현황");
         System.out.println("0. 메인으로 돌아가기");
     }
+
+    //1. 상품 추가 기능
+    //새로운 상품의 정보(상품명, 가격, 설명, 재고수량)를 입력받아 기존 카테고리에 추가
+    private void adminAddProduct(List<Category> categories){
+
+        System.out.println("\n어느 카테고리에 상품을 추가하시겠습니까?");
+        for (int i = 0; i < categories.size(); i++) {
+            System.out.println((i + 1) + ". " + categories.get(i).getCategoryName());
+        }
+
+        Scanner scanner = new Scanner(System.in);
+        int select = scanner.nextInt();
+        scanner.nextLine(); //개행 제거
+
+        Category selectedCategory = categories.get(select - 1);
+
+        System.out.println("\n[ " + selectedCategory.getCategoryName() +" 카테고리에 상품 추가" +" ]");
+
+        //상품명 입력 + 전체 카테고리 중복 검사
+        String productName;
+        while (true){
+            System.out.printf("상품명을 입력해주세요: ");
+            productName = scanner.nextLine();
+
+            if (productName.isEmpty()){
+                System.out.println("상품명은 필수로 입력해야합니다. 다시 입력해주세요.");
+                continue;
+            }
+            //중복 여부
+            boolean isduplicated = false;
+
+            //모든 카테고리의 모든 상품 순회하며 확인
+            for (int i = 0; i < categories.size(); i++) {
+                for (int j = 0; j < categories.get(i).getProducts().size(); j++) {
+                    if(categories.get(i).getProducts().get(j).getName().equals(productName)){
+                        isduplicated = true;
+                        break;
+                    }
+                }
+            }
+            //만약 중복이면 경고메세지 출력
+            if(isduplicated){
+                System.out.println("같은 상품명이 이미 존재합니다. 다른 상품명으로 입력해주세요.");
+                continue;
+            }
+
+            //중복이 아니면 상품명 확정
+            break;
+        }//while()
+
+
+        System.out.printf("가격을 입력해주세요: ");
+        int productPrice = scanner.nextInt();
+        scanner.nextLine(); // 개행 제거
+
+        System.out.printf("상품 설명을 입력해주세요: ");
+        String productDescription = scanner.nextLine();
+
+        System.out.printf("재고수량을 입력해주세요: ");
+        int productStock = scanner.nextInt();
+        scanner.nextLine(); // 개행 제거
+
+        System.out.printf("\"%-10s | %,10d원 | %s | 재고: %d개\"%n",
+                productName, productPrice, productDescription, productStock);
+
+
+        while (true){
+            try {
+                System.out.println("위 정보로 상품을 추가하시겠습니까?");
+                System.out.println("1. 확인       2. 취소");
+                int confirm = scanner.nextInt();
+                if (confirm == 1) break;
+                else if (confirm == 2) {
+                    System.out.println("관리자 메뉴로 이동합니다.");
+                    return;
+                }
+                else {
+                    System.out.println("잘못된 입력입니다. 다시 입력하세요");
+                }
+            }
+            catch (InputMismatchException e){
+                System.out.println("숫자만 입력해야합니다. 다시 입력하세요.");
+            } finally {
+                scanner.nextLine(); // 입력 버퍼 정리
+            }
+        }
+
+        Product newProduct = new Product(productName, productPrice, productDescription, productStock);
+        selectedCategory.getProducts().add(newProduct); //선택한 카테고리에 상품 추가
+
+        System.out.println("상품이 성공적으로 추가되었습니다!");
+
+        //선택한 카테고리의 상품 목록 출력 (확인용)
+        List<Product> products = selectedCategory.getProducts();
+
+        for (int i = 0; i < products.size(); i++) {
+            System.out.print((i + 1) + ". ");
+            products.get(i).printSelectedInfo();
+        }
+    }
+
 }

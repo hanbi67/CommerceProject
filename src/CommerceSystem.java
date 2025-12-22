@@ -15,6 +15,11 @@ public class CommerceSystem {
         this.categories = categories;
     }
 
+    //관리자 모드에서 카테고리 목록 접근용 getter
+    public List<Category> getCategories() {
+        return categories;
+    }
+
     public void start(){
         Scanner scanner = new Scanner(System.in);
 
@@ -56,6 +61,7 @@ public class CommerceSystem {
                         }
                         //관리자 모드 시작
                         adminModeSystem.adminMode();
+                        continue;
                     }
 
                     selectedCategory = categories.get(select - 1);
