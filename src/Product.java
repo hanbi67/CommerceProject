@@ -41,6 +41,15 @@ public class Product {
         return stock;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
     public void setStock(Integer stock) {
         this.stock = stock;
     }

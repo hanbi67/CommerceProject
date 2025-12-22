@@ -86,6 +86,7 @@ public class AdminModeSystem {
                     break;
                 case 2:
                     //상품 수정 기능 메서드
+                    adminModifyProduct(commerceSystem.getCategories());
                     break;
                 case 3:
                     //상품 삭제 기능 메서드
@@ -210,6 +211,99 @@ public class AdminModeSystem {
             System.out.print((i + 1) + ". ");
             products.get(i).printSelectedInfo();
         }
-    }
+    }//adminAddProduct()
+
+    //2. 상품명 수정
+    //기존 상품의 정보 수정 (가격, 설명, 재고수량)
+    //상품명으로 검색하여 수정할 상품 선택
+    private void adminModifyProduct(List<Category> categories){
+        Scanner scanner = new Scanner(System.in);
+
+        //수정할 대상 경로
+        Product targetProduct = null;
+        Category targetCategory = null;
+
+        System.out.printf("\n수정할 상품명을 입력해주세요: ");
+        String searchProductName = scanner.nextLine();
+
+        //모든 카테고리의 모든 상품 순회하며 확인 후 상품 정보 출력
+        for (int i = 0; i < categories.size(); i++) {
+            for (int j = 0; j < categories.get(i).getProducts().size(); j++) {
+                if(categories.get(i).getProducts().get(j).getName().equals(searchProductName)){
+                    targetProduct = categories.get(i).getProducts().get(j);
+                    targetCategory = categories.get(i);
+                    System.out.printf("현재 상품 정보: ");
+                    categories.get(i).getProducts().get(j).printSelectedInfo();
+                    break;
+
+                }
+            }
+            break;
+        }
+        if(targetProduct == null){
+            System.out.println("\n일치하는 상품 정보를 찾을 수 없습니다.");
+            return; //관리자 모드 메뉴로 이동
+        }
+
+        while (true){
+            try {
+                System.out.println("수정할 항목을 선택해주세요");
+                System.out.println("1. 가격");
+                System.out.println("2. 설명");
+                System.out.println("3. 재고수량");
+                System.out.println("0. 수정 취소");
+                Integer modifySelect = scanner.nextInt();
+                scanner.nextLine();
+
+                if (modifySelect == 0) break;
+                else if (modifySelect == 1){
+                    System.out.printf(String.format("현재 가격: %,10d원%n", targetProduct.getPrice()));
+                    Integer productPrice = targetProduct.getPrice();
+                    System.out.printf("새로운 가격을 입력해주세요: ");
+                    Integer newPrice = scanner.nextInt();
+
+                    //newPrice로 상품 가격 수정
+                    targetProduct.setPrice(newPrice);
+                    System.out.printf(String.format("\n%s의 가격이 %,10d원 → %,10d원으로 수정되었습니다.\n",
+                            targetProduct.getName(), productPrice, targetProduct.getPrice()));
+
+                    break;
+
+                }
+                else if (modifySelect == 2) {
+                    System.out.printf(String.format("현재 설명: %s%n", targetProduct.getDescription()));
+                    String productDescription = targetProduct.getDescription();
+                    System.out.printf("새로운 설명을 입력해주세요: ");
+                    String newDescription = scanner.nextLine();
+
+                    //newDescription로 상품 설명 수정
+                    targetProduct.setDescription(newDescription);
+                    System.out.printf(String.format("\n%s의 설명이 \"%s\" → \"%s\"으로 수정되었습니다.\n",
+                            targetProduct.getName(), productDescription, targetProduct.getDescription()));
+
+                    break;
+                }
+                else if (modifySelect == 3) {
+                    System.out.printf(String.format("현재 재고수량: %d개%n", targetProduct.getStock()));
+                    Integer productStock = targetProduct.getStock();
+                    System.out.printf("새로운 재고수량을 입력해주세요: ");
+                    Integer newStock = scanner.nextInt();
+
+                    //newStock로 상품 재고수량 수정
+                    targetProduct.setStock(newStock);
+                    System.out.printf(String.format("\n%s의 재고수량이 %d개 → %d개로 수정되었습니다.\n",
+                            targetProduct.getName(), productStock, targetProduct.getStock()));
+                    break;
+                }
+                else {
+                    System.out.println("잘못된 입력입니다. 다시 입력하세요");
+                }
+            }
+            catch (InputMismatchException e){
+                System.out.println("숫자만 입력해야합니다. 다시 입력하세요.");
+            }
+        }//while()
+
+    }//adminModifyProduct()
 
 }
