@@ -20,12 +20,28 @@ public class Product {
 
     //메뉴 출력 메서드
     public void printInfo() {
-        System.out.printf("%-15s | %,10d원 | %s%n", name, price, description);
+        System.out.printf("%-10s | %,10d원 | %s%n", name, price, description);
     }
 
     //선택한 제품 출력 메서드
     public void printSelectedInfo() {
-        System.out.println(String.format("%s | %,10d원 | %s | 재고: %d개", name, price, description, stock));
+        System.out.println(String.format("%s | %,10d원 | %s | 재고: %d개%n", name, price, description, stock));
     }
 
+    public String getName() {
+        return name;
+    }
+    public Integer getPrice() {
+        return price;
+    }
+    public String getDescription() {
+        return description;
+    }
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
 }
