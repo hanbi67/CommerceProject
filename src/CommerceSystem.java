@@ -20,6 +20,11 @@ public class CommerceSystem {
         return categories;
     }
 
+    //관리자 모드에서 장바구니 접근용 getter
+    public ShoppingCart getShoppingCart() {
+        return shoppingCart;
+    }
+
     public void start(){
         Scanner scanner = new Scanner(System.in);
 
@@ -136,8 +141,9 @@ public class CommerceSystem {
                         System.out.println("장바구니 담기를 취소합니다. 메인으로 돌아갑니다.\n");
                         break;
                     }
-                } catch (IndexOutOfBoundsException e){
-                    System.out.println("잘못된 입력입니다. 다시 입력하세요"); //❗이 부분 출력 안 되는 중❗
+                    else{
+                        System.out.println("잘못된 입력입니다. 다시 입력하세요");
+                    }
                 } catch (InputMismatchException e){
                     System.out.println("숫자만 입력해야합니다. 다시 입력하세요.");
                 } finally {
@@ -220,9 +226,9 @@ public class CommerceSystem {
                                 start();
                                 return;
                             }
-                        }
-                        catch (IndexOutOfBoundsException e) {
-                            System.out.println("잘못된 입력입니다. 다시 입력하세요.");
+                            else{
+                                System.out.println("잘못된 입력입니다. 다시 입력하세요.");
+                            }
                         }
                         catch (InputMismatchException e) {
                             System.out.println("숫자만 입력해야합니다. 다시 입력하세요.");
@@ -240,9 +246,9 @@ public class CommerceSystem {
                     start();
                     return;
                 }
-            }
-            catch (IndexOutOfBoundsException e) {
-                System.out.println("잘못된 입력입니다. 다시 입력하세요."); //❗이 부분 출력 안 되는 중❗
+                else{
+                    System.out.println("잘못된 입력입니다. 다시 입력하세요.");
+                }
             }
             catch (InputMismatchException e) {
                 System.out.println("숫자만 입력해야합니다. 다시 입력하세요.");
@@ -251,14 +257,6 @@ public class CommerceSystem {
                 scanner.nextLine();
             }
         }//while()
-    }
-
-    //관리자 비밀번호 설정, 인증 시스템
-
-
-    //6.관리자 모드
-    public void adminMode(Integer select){
-
     }
 
     //프로그램 종료 메서드

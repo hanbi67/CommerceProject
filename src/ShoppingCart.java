@@ -73,6 +73,15 @@ public class ShoppingCart {
         printCartInfo();
     }
 
+    //장바구니에서 상품 삭제 체크
+    public boolean removeProduct(Product product){
+        //장바구니에 상품 없다면 false 반환
+        if (product == null) {
+            return false;
+        }
+        return cartItems.remove(product) != null;
+    }
+
     // 장바구니 비어있는지 체크 (주문 관리 출력용)
     public boolean isEmpty() {
         return cartItems.isEmpty();

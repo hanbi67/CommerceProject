@@ -90,6 +90,7 @@ public class AdminModeSystem {
                     break;
                 case 3:
                     //상품 삭제 기능 메서드
+                    adminDeleteProduct(commerceSystem.getCategories());
                     break;
                 case 4:
                     //전체 상품 현황(모든 카테고리, 모든 상품 출력)
@@ -305,5 +306,68 @@ public class AdminModeSystem {
         }//while()
 
     }//adminModifyProduct()
+
+    //3. 상품 삭제 기능
+    //기존 상품을 카테고리에서 제거
+    private void adminDeleteProduct(List<Category> categories){
+        Scanner scanner = new Scanner(System.in);
+
+        //삭제할 대상 경로
+        Product targetProduct = null;
+        Category targetCategory = null;
+
+        System.out.printf("\n삭제할 상품명을 입력해주세요: ");
+        String searchProductName = scanner.nextLine();
+
+        //모든 카테고리의 모든 상품 순회하며 확인 후 상품 정보 출력
+        for (int i = 0; i < categories.size(); i++) {
+            for (int j = 0; j < categories.get(i).getProducts().size(); j++) {
+                if(categories.get(i).getProducts().get(j).getName().equals(searchProductName)){
+                    targetProduct = categories.get(i).getProducts().get(j);
+                    targetCategory = categories.get(i);
+                    System.out.printf("현재 상품 정보: ");
+                    categories.get(i).getProducts().get(j).printSelectedInfo();
+                    break;
+                }
+            }
+            break;
+        }
+        if(targetProduct == null){
+            System.out.println("\n일치하는 상품 정보를 찾을 수 없습니다.");
+            return; //관리자 모드 메뉴로 이동
+        }
+
+        while (true){
+            try {
+                System.out.println("\n위 상품을 삭제하시겠습니까?");
+                System.out.println("1. 확인      2. 취소");
+                int deleteConfirm = scanner.nextInt();
+                scanner.nextLine();
+
+                if (deleteConfirm == 1){
+                    targetCategory.getProducts().remove(targetProduct);
+                    System.out.println("상품이 성공적으로 삭제되었습니다!");
+                    //삭제된 상품이 장바구니에 있다면 장바구니에서도 제거
+                    boolean removeCartItem = commerceSystem.getShoppingCart().removeProduct(targetProduct);
+
+                    if(removeCartItem){
+                        System.out.println("장바구니에 있던 동일 상품도 제거되었습니다!");
+                    }
+
+                    break;
+                }
+                else if (deleteConfirm == 2) {
+                    System.out.println("상품 삭제를 취소합니다. 관리자 모드 메인으로 돌아갑니다.");
+                    return;
+                }
+                else {
+                    System.out.println("잘못된 입력입니다. 다시 입력하세요");
+                }
+            }
+            catch (InputMismatchException e){
+                System.out.println("숫자만 입력해야합니다. 다시 입력하세요.");
+            }
+        }//while()
+    }
 
 }
